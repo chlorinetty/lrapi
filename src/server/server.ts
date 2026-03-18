@@ -7,6 +7,7 @@ const tag: string = "server";
 import * as express from "express";
 import { type Request, type Response, type NextFunction } from "express";
 import { Server as httpserver } from "node:http";
+import cors from "cors";
 
 import { logi, logw, loge } from "../logging/log.js";
 import { type Config } from "../config/iconfig.js";
@@ -74,20 +75,19 @@ export class Server {
     await this.db.Connect();
     const app = express.default();
 
-    //? cors
-    app.use((req, res, next) => {
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-      res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-      );
-      next();
-    });
+    app.use(express.default.json());
 
-    //TODO: sssssaaatanaaa
-    app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-      res.status(err.status || 500).json({ message: err.message });
+    //? cors
+    app.use(
+      cors({
+        origin: "*",
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+      }),
+    );
+
+    app.options("*", (req, res) => {
+      res.sendStatus(200);
     });
 
     app.use(
@@ -100,6 +100,11 @@ export class Server {
       new CategoryRoutes(this.categoryRepo, this.itemRepo).router,
     );
     app.use("/api/items", new ItemsRoutes(this.itemRepo).router);
+
+    //TODO: sssssaaatanaaa
+    app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+      res.status(err.status || 500).json({ message: err.message });
+    });
 
     return app.listen(this.config.Serve.Port, () => {
       logi(tag, `Serving at :${this.config.Serve.Port}`);

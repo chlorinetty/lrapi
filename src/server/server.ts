@@ -74,6 +74,17 @@ export class Server {
     await this.db.Connect();
     const app = express.default();
 
+    //? cors
+    app.use((req, res, next) => {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+      );
+      next();
+    });
+
     //TODO: sssssaaatanaaa
     app.use((err: any, req: Request, res: Response, next: NextFunction) => {
       res.status(err.status || 500).json({ message: err.message });

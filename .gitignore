@@ -3,3 +3,4 @@ node_modules
 dbg*
 yarn.lock
 tsconfig.tsbuildinfo
+test.html

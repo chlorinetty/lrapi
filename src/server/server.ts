@@ -79,7 +79,7 @@ export class Server {
 
     //? cors
     app.use(cors());
-
+    app.options("*", cors());
     app.use(
       "/api/trains",
       new TrainRoutes(this.trainRepo, this.journeyRepo).router,

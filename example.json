@@ -1,0 +1,14 @@
+{
+  "TDS": {
+    "Server": "pandora-liikkuvaruoka.polyphemus.lan",
+    "Port": 1433,
+
+    "Username": "test",
+    "Password": "test",
+
+    "Database": "liikkuvaruoka"
+  },
+  "Serve": {
+    "Port": 4444
+  }
+}

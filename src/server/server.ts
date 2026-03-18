@@ -78,14 +78,7 @@ export class Server {
     app.use(express.json());
 
     //? cors
-    app.use(
-      cors({
-        origin: (origin, callback) => {
-          callback(null, origin);
-        },
-        credentials: true,
-      }),
-    );
+    app.use(cors());
 
     app.use(
       "/api/trains",

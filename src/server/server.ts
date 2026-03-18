@@ -7,7 +7,7 @@ const tag: string = "server";
 import express from "express";
 import { type Request, type Response, type NextFunction } from "express";
 import { Server as httpserver } from "node:http";
-import cors from "cors";
+import cors, { type CorsOptions } from "cors";
 
 import { logi, logw, loge } from "../logging/log.js";
 import { type Config } from "../config/iconfig.js";
@@ -78,8 +78,14 @@ export class Server {
     app.use(express.json());
 
     //? cors
-    app.use(cors());
-    app.options("*", cors());
+    const corsopt: CorsOptions = {
+      origin: "*",
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    };
+    app.use(cors(corsopt));
+    app.options("*", cors(corsopt));
+
     app.use(
       "/api/trains",
       new TrainRoutes(this.trainRepo, this.journeyRepo).router,

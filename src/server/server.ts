@@ -4,7 +4,7 @@
  */
 const tag: string = "server";
 
-import * as express from "express";
+import express from "express";
 import { type Request, type Response, type NextFunction } from "express";
 import { Server as httpserver } from "node:http";
 import cors from "cors";
@@ -73,22 +73,19 @@ export class Server {
 
   Serve = async (): Promise<httpserver> => {
     await this.db.Connect();
-    const app = express.default();
 
-    app.use(express.default.json());
+    const app = express();
+    app.use(express.json());
 
     //? cors
     app.use(
       cors({
-        origin: "*",
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization"],
+        origin: (origin, callback) => {
+          callback(null, origin);
+        },
+        credentials: true,
       }),
     );
-
-    app.options("*", (req, res) => {
-      res.sendStatus(200);
-    });
 
     app.use(
       "/api/trains",

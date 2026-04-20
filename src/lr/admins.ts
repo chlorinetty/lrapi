@@ -4,14 +4,19 @@
  */
 const tag: string = "lr";
 
+import { randomBytes } from "crypto";
+import { TYPES } from "tedious";
+
 import { Liikkuvaruoka } from "./lr.js";
 import { logi, logw, loge } from "../logging/log.js";
-import { TYPES } from "tedious";
+
+import { type Config } from "../config/iconfig.js";
 
 export interface IAdmin {
   AdminID: number;
   TrainID: number;
-  FuckYou: string;
+  Username: string;
+  PasswordHash: string;
 }
 
 export class Admins {
@@ -26,7 +31,8 @@ export class Admins {
       `SELECT 
         AdminID,
         TrainID,
-        FuckYou
+        Username,
+        PasswordHash
       FROM 
         Admins;`,
     );
@@ -37,12 +43,32 @@ export class Admins {
       `SELECT 
         AdminID,
         TrainID,
-        FuckYou
+        Username,
+        PasswordHash
       FROM 
-        Admins;
+        Admins
       WHERE
         AdminID = @AdminID;`,
       [{ Parameter: "AdminID", Type: TYPES.Int, Value: id }],
+    );
+
+    return result[0] ?? null;
+  };
+
+  public GetAdminByUsername = async (
+    username: string,
+  ): Promise<IAdmin | null> => {
+    const result = await this.db.Query<IAdmin>(
+      `SELECT
+        AdminID,
+        TrainId,
+        Username,
+        PasswordHash
+      FROM
+        Admins
+      WHERE
+        Username = @Username;`,
+      [{ Parameter: "Username", Type: TYPES.Int, Value: username }],
     );
 
     return result[0] ?? null;

@@ -9,6 +9,9 @@
     "Database": "liikkuvaruoka"
   },
   "Serve": {
-    "Port": 4444
+    "Port": 4444,
+    "Authentication": {
+      "TokenExpirySec": 1800
+    }
   }
 }

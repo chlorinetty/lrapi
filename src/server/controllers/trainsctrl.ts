@@ -6,17 +6,22 @@ import { logi, logw, loge } from "../../logging/log.js";
 const tag: string = "server";
 
 import { type Request, type Response } from "express";
-import { type TrainsResponse } from "../models/trainsres.js";
-import { type JourneysResponse } from "../models/journeysres.js";
+
+import type { Config } from "../../config/iconfig.js";
 
 import { Train, type ITrain } from "../../lr/train.js";
+import { type TrainsResponse } from "../models/trainsres.js";
+
 import { Journey, type IJourney } from "../../lr/journey.js";
+import { type JourneysResponse } from "../models/journeysres.js";
 
 export class TrainController {
+  private readonly config: Config;
   private readonly repo: Train;
   private readonly jrepo: Journey;
 
-  constructor(repo: Train, jrepo: Journey) {
+  constructor(config: Config, repo: Train, jrepo: Journey) {
+    this.config = config;
     this.repo = repo;
     this.jrepo = jrepo;
   }

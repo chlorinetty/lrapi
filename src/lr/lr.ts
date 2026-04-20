@@ -7,6 +7,8 @@ const tag: string = "lr";
 import type { DataType } from "tedious/lib/data-type.js";
 import { logi, logw, loge } from "../logging/log.js";
 
+import type { Config } from "../config/iconfig.js";
+
 import {
   Connection,
   Request,
@@ -21,12 +23,30 @@ interface IParameter {
 }
 
 export class Liikkuvaruoka {
-  protected readonly config: ConnectionConfiguration;
+  private readonly config: Config;
   protected readonly connector: Connection;
 
-  constructor(config: ConnectionConfiguration) {
+  constructor(config: Config) {
     this.config = config;
-    this.connector = new Connection(this.config);
+    this.connector = new Connection({
+      server: this.config.TDS.Server,
+      options: {
+        port: this.config.TDS.Port,
+        database: this.config.TDS.Database,
+        encrypt: false,
+      },
+      authentication: {
+        options: {
+          userName: this.config.TDS.Username,
+          password: this.config.TDS.Password,
+        },
+        type: "default",
+      },
+    });
+  }
+
+  public get Config() {
+    return this.config;
   }
 
   /**
@@ -58,13 +78,13 @@ export class Liikkuvaruoka {
       this.connector.once("connect", onConnect);
       this.connector.once("error", onError);
 
-      logi(tag, `Connecting to server: ${this.config.server}`);
+      logi(tag, `Connecting to server: ${this.config.TDS.Server}`);
       this.connector.connect();
     });
   }
 
   public Close = () => {
-    logi(tag, `Closing connection with server: ${this.config.server}`);
+    logi(tag, `Closing connection with server: ${this.config.TDS.Server}`);
     this.connector.closeConnection();
   };
 

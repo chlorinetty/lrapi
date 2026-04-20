@@ -5,18 +5,23 @@
 import { logi, logw, loge } from "../../logging/log.js";
 const tag: string = "server";
 
+import type { Config } from "../../config/iconfig.js";
+
 import { type Request, type Response } from "express";
-import { type CategoriesResponse } from "../models/categoriesres.js";
 
 import { Categories, type ICategory } from "../../lr/categories.js";
+import { type CategoriesResponse } from "../models/categoriesres.js";
+
 import type { IItem, Items } from "../../lr/items.js";
 import type { ItemsResponse } from "../models/itemsres.js";
 
 export class CategoryController {
+  private readonly config: Config;
   private readonly repo: Categories;
   private readonly irepo: Items;
 
-  constructor(repo: Categories, irepo: Items) {
+  constructor(config: Config, repo: Categories, irepo: Items) {
+    this.config = config;
     this.repo = repo;
     this.irepo = irepo;
   }

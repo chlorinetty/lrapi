@@ -7,13 +7,17 @@ const tag: string = "server";
 
 import { type Request, type Response } from "express";
 
+import type { Config } from "../../config/iconfig.js";
+
 import { Journey, type IJourney } from "../../lr/journey.js";
 import type { JourneysResponse } from "../models/journeysres.js";
 
 export class JourneyController {
+  private readonly config: Config;
   private readonly repo: Journey;
 
-  constructor(repo: Journey) {
+  constructor(config: Config, repo: Journey) {
+    this.config = config;
     this.repo = repo;
   }
 

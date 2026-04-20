@@ -44,21 +44,7 @@ export class Server {
 
   constructor(config: Config) {
     this.config = config;
-    this.db = new Liikkuvaruoka({
-      server: this.config.TDS.Server,
-      options: {
-        port: this.config.TDS.Port,
-        database: this.config.TDS.Database,
-        encrypt: false,
-      },
-      authentication: {
-        options: {
-          userName: this.config.TDS.Username,
-          password: this.config.TDS.Password,
-        },
-        type: "default",
-      },
-    });
+    this.db = new Liikkuvaruoka(this.config);
 
     this.trainRepo = new Train(this.db);
     this.categoryRepo = new Categories(this.db);
@@ -88,16 +74,18 @@ export class Server {
 
     app.use(
       "/api/trains",
-      new TrainRoutes(this.trainRepo, this.journeyRepo).router,
+      new TrainRoutes(this.config, this.trainRepo, this.journeyRepo).Router,
     );
-    app.use("/api/journeys", new JourneyRoutes(this.journeyRepo).router);
+    app.use(
+      "/api/journeys",
+      new JourneyRoutes(this.config, this.journeyRepo).Router,
+    );
     app.use(
       "/api/categories",
-      new CategoryRoutes(this.categoryRepo, this.itemRepo).router,
+      new CategoryRoutes(this.config, this.categoryRepo, this.itemRepo).Router,
     );
-    app.use("/api/items", new ItemsRoutes(this.itemRepo).router);
+    app.use("/api/items", new ItemsRoutes(this.config, this.itemRepo).Router);
 
-    //TODO: sssssaaatanaaa
     app.use((err: any, req: Request, res: Response, next: NextFunction) => {
       res.status(err.status || 500).json({ message: err.message });
     });

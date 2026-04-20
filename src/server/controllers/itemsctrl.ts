@@ -6,14 +6,18 @@ import { logi, logw, loge } from "../../logging/log.js";
 const tag: string = "server";
 
 import { type Request, type Response } from "express";
-import { type ItemsResponse } from "../models/itemsres.js";
+
+import type { Config } from "../../config/iconfig.js";
 
 import { Items, type IItem } from "../../lr/items.js";
+import { type ItemsResponse } from "../models/itemsres.js";
 
 export class ItemsController {
+  private readonly config: Config;
   private readonly repo: Items;
 
-  constructor(repo: Items) {
+  constructor(config: Config, repo: Items) {
+    this.config = config;
     this.repo = repo;
   }
 

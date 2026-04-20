@@ -2,9 +2,4 @@
  * lrapi
  * akseli@awrinne.fi
  */
-const tag: string = "server/login";
-
-import { Router } from "express";
-export const router = Router();
-
-router.get("/");
+const tag: string = "server";

@@ -13,8 +13,13 @@ interface TDS {
   Database: string;
 }
 
+interface Serve_Authentication {
+  TokenExpirySec: 1800;
+}
+
 interface Serve {
   Port: number;
+  Authentication: Serve_Authentication;
 }
 
 export interface Config {
